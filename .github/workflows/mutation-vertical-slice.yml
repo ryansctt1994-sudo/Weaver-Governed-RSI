@@ -1,0 +1,67 @@
+name: mutation-vertical-slice
+
+on:
+  push:
+    branches:
+      - feature/mutation-vertical-slice-v1
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  vertical-slice:
+    name: M00 + MCTL-1 + M01 + M06
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install project and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+
+      - name: Baseline adversarial suites
+        env:
+          WEAVER_RACE_ITERATIONS: "1000"
+        run: |
+          python -m pytest \
+            validation/adversarial/test_toctou_object_identity.py \
+            validation/adversarial/test_authority_composition.py \
+            -q
+
+      - name: Run semantic mutation vertical slice
+        env:
+          WEAVER_RACE_ITERATIONS: "1000"
+        run: |
+          python -m mutation.runner --vertical-slice
+
+      - name: Print vertical-slice receipt
+        if: always()
+        run: |
+          if [ -f mutation/reports/vertical_slice_summary.json ]; then
+            cat mutation/reports/vertical_slice_summary.json
+          fi
+
+      - name: Upload mutation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-vertical-slice-${{ github.sha }}
+          path: mutation/reports/
+          if-no-files-found: warn
+          retention-days: 30
