@@ -15,6 +15,17 @@ dependencies = [
 [project.optional-dependencies]
 test = ["pytest>=8"]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "identity*",
+  "governance*",
+  "evidence*",
+  "mutation*",
+  "validation*",
+]
+exclude = ["mutation.reports*"]
+
 [tool.pytest.ini_options]
 addopts = "-ra"
 testpaths = ["validation"]
