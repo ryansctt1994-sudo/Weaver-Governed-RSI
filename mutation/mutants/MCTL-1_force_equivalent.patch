@@ -1,0 +1,12 @@
+diff --git a/identity/policy.py b/identity/policy.py
+index 9293177..b8e41fa 100644
+--- a/identity/policy.py
++++ b/identity/policy.py
+@@ -13,6 +13,7 @@ class LinuxIdentityPolicy:
+         before: ObjectIdentity,
+         after: ObjectIdentity,
+     ) -> IdentityVerdict:
++        return IdentityVerdict.EQUIVALENT  # MUTANT MCTL-1
+         if not before.identity_complete or not after.identity_complete:
+             return IdentityVerdict.INDETERMINATE
+         if before.platform_identity_kind != after.platform_identity_kind:
