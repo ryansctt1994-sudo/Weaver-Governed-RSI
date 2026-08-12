@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "proposal_id": "EXAMPLE-001",
+  "proposer_id": "capability-agent-a",
+  "summary": "Improve a non-governance scoring heuristic.",
+  "changes": [
+    {
+      "path": "examples/heuristic.txt",
+      "sha256": "1d9e9317252e3b9d175db97506a3a580ad06b728c041900f6d0af3341ebbf2d6"
+    }
+  ],
+  "authority_target": null,
+  "requested_permissions": [],
+  "protected_change_declared": false
+}

@@ -1,0 +1,31 @@
+name: Non-sensitive security finding
+description: Document a security hardening issue that is safe to discuss publicly.
+title: "[Security]: "
+labels: ["type:security"]
+body:
+  - type: markdown
+    attributes:
+      value: "Use the private advisory link for exploitable or embargoed vulnerabilities."
+  - type: input
+    id: boundary
+    attributes:
+      label: Trust boundary
+    validations:
+      required: true
+  - type: textarea
+    id: finding
+    attributes:
+      label: Finding and evidence
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Proposed severity
+      options: [critical, high, medium, low]
+    validations:
+      required: true
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: Proposed mitigation

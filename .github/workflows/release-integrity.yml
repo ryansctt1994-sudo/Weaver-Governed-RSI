@@ -1,0 +1,28 @@
+name: Release Integrity
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci-8-release-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - run: python -m pip install --require-hashes -r requirements.lock
+      - run: pytest tests/release_builder validation/adversarial/test_filesystem_toctou.py
+      - run: python release/generate_manifest.py --root . --output /tmp/PAYLOAD_MANIFEST.sha256
+      - run: >-
+          python release/verify_release.py
+          --root .
+          --manifest /tmp/PAYLOAD_MANIFEST.sha256
+          --require-complete

@@ -1,0 +1,24 @@
+schema_version: "1.0"
+states:
+  - DRAFT
+  - SUBMITTED
+  - VALIDATED
+  - RATIFIED
+  - APPLIED
+  - REJECTED
+  - INDETERMINATE
+rules:
+  proposal_requires_distinct_action: true
+  protected_change_requires_explicit_flag: true
+  protected_change_requires_independent_review_when_available: true
+  self_authorization_forbidden: true
+  evidence_self_promotion_forbidden: true
+  indeterminate_can_authorize: false
+  revocation_precedence: true
+evidence_tiers:
+  E0: "Proposed, scaffolded, or unverified"
+  E1: "Internally inspected artifact with recorded identity"
+  E2: "Repeatable same-environment validation"
+  E3: "Fresh-environment verification tied to exact bytes"
+  E4: "Accepted independent heterogeneous replication"
+  E5: "Independent external review with published scope and limitations"

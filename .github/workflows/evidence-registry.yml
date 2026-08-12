@@ -1,0 +1,33 @@
+name: Evidence Registry Read-Only Audit
+
+on:
+  pull_request:
+    paths:
+      - "evidence/**"
+      - "schemas/evidence_claim.schema.json"
+      - "validation/evidence_registry.py"
+      - ".github/workflows/evidence-registry.yml"
+  push:
+    branches: [main]
+    paths:
+      - "evidence/**"
+      - "schemas/evidence_claim.schema.json"
+      - "validation/evidence_registry.py"
+
+permissions:
+  contents: read
+
+jobs:
+  registry-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - run: python -m pip install --require-hashes -r requirements.lock
+      - run: python validation/portfolio_audit.py --registry evidence/registry.json
+      - name: Assert CI did not mutate registry
+        run: git diff --exit-code -- evidence/registry.json

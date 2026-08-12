@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "proposal_id": "EXAMPLE-BLOCKED-001",
+  "proposer_id": "capability-agent-a",
+  "summary": "Attempt to grant the proposer ratification authority.",
+  "changes": [
+    {
+      "path": "kernel/authority_registry.py",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "authority_target": "capability-agent-a",
+  "requested_permissions": ["ratify"],
+  "protected_change_declared": false
+}

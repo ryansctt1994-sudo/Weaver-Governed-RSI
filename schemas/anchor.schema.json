@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ryansctt1994-sudo/Weaver-Governed-RSI/blob/main/schemas/anchor.schema.json",
+  "title": "External evidence anchor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "anchor_id", "provider", "digest", "anchored_at", "proof"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "anchor_id": { "type": "string", "minLength": 1 },
+    "provider": { "type": "string", "minLength": 1 },
+    "digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "anchored_at": { "type": "string", "format": "date-time" },
+    "proof": { "type": "object" },
+    "verification_uri": { "type": ["string", "null"], "format": "uri" }
+  }
+}

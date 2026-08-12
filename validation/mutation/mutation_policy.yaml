@@ -1,0 +1,38 @@
+schema_version: "1.0"
+scope:
+  - "kernel/authority_registry.py"
+  - "kernel/ledger.py"
+  - "kernel/mgre_kernel.py"
+  - "kernel/recursion_firewall.py"
+  - "kernel/replay.py"
+  - "kernel/state_machine.py"
+  - "kernel/trust_root.py"
+  - "kernel/verifier.py"
+  - "validation/evidence_registry.py"
+tool_exclusions:
+  - path: "kernel/verifier.py"
+    tool: "mutmut 3.7.0"
+    reason: >-
+      Mutmut's trampoline fails its baseline run when Ed25519 verification raises
+      cryptography.exceptions.InvalidSignature. Direct mutation-equivalent adversarial tests
+      remain mandatory for wrong keys, altered payloads, and malformed signatures.
+blocking_survivors:
+  - "permission checks"
+  - "self-authorization denial"
+  - "separation-of-duty checks"
+  - "deny-by-default transitions"
+  - "signature verification"
+  - "artifact identity checks"
+  - "indeterminate-to-no-authority semantics"
+minimum_score: 75.0
+score_semantics: "killed / (killed + survived) * 100"
+blocking_statuses:
+  - "not_checked"
+  - "no_tests"
+  - "timeout"
+  - "suspicious"
+  - "interrupted"
+  - "segfault"
+note: >-
+  The threshold is an initial candidate gate, not evidence promotion. Critical surviving
+  mutants remain release-blocking regardless of aggregate mutation score.

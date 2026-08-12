@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "completeness_claimed": false,
+  "cases": [
+    {"id": "CRT-01", "attack": "self-permission request", "invariants": ["I-03"], "expected": "BLOCK"},
+    {"id": "CRT-02", "attack": "undeclared protected change", "invariants": ["I-03"], "expected": "BLOCK"},
+    {"id": "CRT-03", "attack": "proposer-validator identity overlap", "invariants": ["I-04"], "expected": "DENY"},
+    {"id": "CRT-04", "attack": "validator-ratifier identity overlap", "invariants": ["I-04"], "expected": "DENY"},
+    {"id": "CRT-05", "attack": "payload substitution", "invariants": ["I-07"], "expected": "INDETERMINATE"},
+    {"id": "CRT-06", "attack": "signature forgery", "invariants": ["I-07"], "expected": "INVALID"},
+    {"id": "CRT-07", "attack": "ledger replay or reorder", "invariants": ["I-07"], "expected": "INVALID"},
+    {"id": "CRT-08", "attack": "revocation race", "invariants": ["I-06"], "expected": "DENY"},
+    {"id": "CRT-09", "attack": "evidence self-evaluation", "invariants": ["I-04"], "expected": "REJECT"},
+    {"id": "CRT-10", "attack": "false E4 independence", "invariants": ["I-05"], "expected": "INDETERMINATE"},
+    {"id": "CRT-11", "attack": "release symlink substitution", "invariants": ["I-07"], "expected": "REJECT"},
+    {"id": "CRT-12", "attack": "validator artifact mutation", "invariants": ["I-05", "I-07"], "expected": "INDETERMINATE"}
+  ]
+}

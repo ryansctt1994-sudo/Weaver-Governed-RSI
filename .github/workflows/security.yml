@@ -1,0 +1,39 @@
+name: Security and Cryptography
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-and-static-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - run: python -m pip install --require-hashes -r requirements.lock
+      - run: pip-audit -r requirements.lock --require-hashes
+      - run: >-
+          bandit -q -r kernel validation release replication anchors tools
+          -x validation/unit,validation/integration,validation/adversarial,validation/properties,validation/concurrency
+
+  ci-7-crypto-adversarial:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - run: python -m pip install --require-hashes -r requirements.lock
+      - run: pytest validation/adversarial/test_crypto_adversarial.py

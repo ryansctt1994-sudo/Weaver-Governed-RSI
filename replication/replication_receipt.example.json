@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "receipt_id": "REPLACE-WITH-UNIQUE-ID",
+  "replicator": {
+    "identity": "REPLACE-WITH-VERIFIABLE-IDENTITY",
+    "organization": null,
+    "relationship_disclosure": "REPLACE-WITH-COMPLETE-DISCLOSURE",
+    "public_key_fingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "artifact": {
+    "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "payload_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "bundle_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "environment": {
+    "os": "REPLACE",
+    "architecture": "REPLACE",
+    "python": "REPLACE",
+    "fingerprint": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "result": "INDETERMINATE",
+  "commands": [
+    {
+      "argv": ["./replication/run_all.sh"],
+      "exit_code": 3,
+      "stdout_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "stderr_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "deviations": ["EXAMPLE ONLY; do not submit zero digests"],
+  "signature": {
+    "algorithm": "Ed25519",
+    "value_base64": "REPLACE-AFTER-SIGNING-CANONICAL-UNSIGNED-JSON"
+  }
+}

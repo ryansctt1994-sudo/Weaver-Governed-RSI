@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "repository_evidence_ceiling": "E0",
+  "last_evaluated_at": null,
+  "last_evaluator_id": null,
+  "portfolio_status_declarations": [
+    {
+      "declaration_id": "DECL-LEGACY-E3-001",
+      "claimed_ceiling": "E3",
+      "status": "PENDING_IMPORT_AND_REVIEW",
+      "source_artifact_sha256": null,
+      "accepted_as_repository_evidence": false,
+      "note": "Historical E3 claim supplied in project context; underlying bytes and receipts are not present."
+    }
+  ],
+  "claims": [],
+  "known_findings": [
+    {
+      "finding_id": "F-07",
+      "summary": null,
+      "status": "UNIMPORTED",
+      "blocking": null,
+      "canonical_source_required": true
+    },
+    {
+      "finding_id": "F-10",
+      "summary": null,
+      "status": "UNIMPORTED",
+      "blocking": null,
+      "canonical_source_required": true
+    },
+    {
+      "finding_id": "F-11",
+      "summary": null,
+      "status": "UNIMPORTED",
+      "blocking": null,
+      "canonical_source_required": true
+    },
+    {
+      "finding_id": "F-12",
+      "summary": null,
+      "status": "UNIMPORTED",
+      "blocking": null,
+      "canonical_source_required": true
+    }
+  ],
+  "gaps": [
+    "Historical MGRE source and exact release bytes are not imported.",
+    "No accepted signed validation receipt is present.",
+    "No independent heterogeneous replication receipt is present.",
+    "No external evidence evaluator is configured."
+  ]
+}

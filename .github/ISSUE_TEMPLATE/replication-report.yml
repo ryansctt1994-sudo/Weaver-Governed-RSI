@@ -1,0 +1,40 @@
+name: Replication report
+description: Submit a reproduction attempt for registry review.
+title: "[Replication]: "
+labels: ["type:replication", "type:evidence"]
+body:
+  - type: input
+    id: release
+    attributes:
+      label: Immutable release or commit
+    validations:
+      required: true
+  - type: input
+    id: receipt
+    attributes:
+      label: Receipt SHA-256
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Replication result
+      options: [PASS, FAIL, INDETERMINATE, INDETERMINATE_ARTIFACT_MUTATION]
+    validations:
+      required: true
+  - type: textarea
+    id: relationship
+    attributes:
+      label: Relationship disclosure
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and heterogeneity
+    validations:
+      required: true
+  - type: textarea
+    id: deviations
+    attributes:
+      label: Deviations and raw-result links

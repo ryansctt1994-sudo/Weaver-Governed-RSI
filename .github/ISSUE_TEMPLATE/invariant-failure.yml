@@ -1,0 +1,31 @@
+name: Invariant failure
+description: Report evidence that a constitutional invariant is false.
+title: "[Invariant failure]: "
+labels: ["type:invariant-failure"]
+body:
+  - type: input
+    id: invariant
+    attributes:
+      label: Invariant ID
+      placeholder: I-03
+    validations:
+      required: true
+  - type: input
+    id: artifact
+    attributes:
+      label: Artifact SHA-256 or commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Reproduction evidence
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result classification
+      options: [FAIL, INDETERMINATE]
+    validations:
+      required: true

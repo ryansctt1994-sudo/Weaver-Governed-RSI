@@ -1,0 +1,13 @@
+schema_version: "1.0"
+default_reviewers_required: 1
+independent_reviewers_required_when_available: 1
+targets:
+  - "constitution/**"
+  - "kernel/recursion_firewall.py"
+  - "kernel/verifier.py"
+  - "kernel/authority_registry.py"
+  - "kernel/trust_root.py"
+  - "release/**"
+  - "validation/evidence_registry.py"
+  - ".github/CODEOWNERS"
+  - ".github/workflows/**"

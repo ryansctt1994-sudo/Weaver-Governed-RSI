@@ -1,0 +1,26 @@
+schema_version: "1.0"
+required_files:
+  - "source.tar.gz"
+  - "PAYLOAD_MANIFEST.sha256"
+  - "BUNDLE_MANIFEST.sha256"
+  - "BUNDLE_MANIFEST.sig"
+  - "maintainer_public.pem"
+  - "replication-kit.tar.gz"
+  - "README_replication.md"
+forbidden_patterns:
+  - "*.key"
+  - "*.p12"
+  - ".env"
+  - ".env.*"
+  - "*private*.pem"
+  - "*.sqlite"
+  - "*.sqlite3"
+  - "*.db"
+requirements:
+  clean_git_tree: true
+  reject_untracked_files: true
+  reject_symlinks: true
+  payload_manifest_required: true
+  bundle_manifest_required: true
+  maintainer_signature_required: true
+  evidence_promotion_permitted: false
