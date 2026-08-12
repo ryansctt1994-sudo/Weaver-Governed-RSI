@@ -1,0 +1,13 @@
+diff --git a/governance/mutation_transaction.py b/governance/mutation_transaction.py
+index 3943716..f325345 100644
+--- a/governance/mutation_transaction.py
++++ b/governance/mutation_transaction.py
+@@ -146,7 +146,7 @@ class MutationTransaction:
+         if not self._staged:
+             self.stage()
+ 
+-        verdict = self._validate_current_identity()
++        verdict = IdentityVerdict.EQUIVALENT  # MUTANT M01: skip revalidation
+         if verdict is not IdentityVerdict.EQUIVALENT:
+             self._terminal_state = DENIAL_STATES[verdict]
+             self._authority_delta = 0
