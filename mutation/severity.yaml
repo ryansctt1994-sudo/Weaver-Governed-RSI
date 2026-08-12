@@ -1,0 +1,17 @@
+schema_version: "weaver.mutation.severity.v1"
+levels:
+  critical:
+    description: Directly disables a load-bearing governance invariant.
+    promotion_blocking_if_survived: true
+  high:
+    description: Cryptographic, trust-root, ledger, or evidence-pipeline integrity.
+    promotion_blocking_if_survived: true
+  medium:
+    description: Completeness or diagnostic strength of evidence.
+    promotion_blocking_if_survived: false
+  low:
+    description: Cosmetic or purely diagnostic.
+    promotion_blocking_if_survived: false
+  control:
+    description: Harness self-checks.
+    promotion_blocking_if_survived: true
