@@ -1,0 +1,14 @@
+diff --git a/governance/composition.py b/governance/composition.py
+index f97c044..aecf79e 100644
+--- a/governance/composition.py
++++ b/governance/composition.py
+@@ -259,8 +259,7 @@ class CompositionEvaluator:
+             return ApplyResult("REJECTED_RECEIPT_PROPOSAL_MISMATCH", state)
+         if authorization.ratification_id != proposal.ratification_id:
+             return ApplyResult("REJECTED_RATIFICATION_PROPOSAL_MISMATCH", state)
+-        if authorization.pre_state_sha256 != state.sha256():
+-            return ApplyResult("REJECTED_STALE_AUTHORIZATION", state)
++        # MUTANT M06: pre-state binding check removed.
+         if authorization.policy_sha256 != state.policy_sha256:
+             return ApplyResult("REJECTED_STALE_POLICY_CONTEXT", state)
+         if authorization.trust_root_version != state.trust_root_version:
