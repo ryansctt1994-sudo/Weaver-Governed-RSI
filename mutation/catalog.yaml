@@ -1,0 +1,260 @@
+schema_version: "weaver.mutation.catalog.v1"
+
+controls:
+  M00:
+    title: no mutation baseline
+    description: Run required adversarial suites without applying a mutation.
+    severity: control
+    expected_status: CONTROL_PASS
+    patch: null
+    detection_mode: junit_failure
+    expected_suites:
+      - validation/adversarial/test_toctou_object_identity.py
+      - validation/adversarial/test_authority_composition.py
+    expected_tests: []
+    expected_changed_paths: []
+
+  MCTL-1:
+    title: catastrophic identity equivalence collapse
+    description: Force every Linux object-identity comparison to EQUIVALENT.
+    severity: control
+    invariants: [I7, I0]
+    expected_suites:
+      - validation/adversarial/test_toctou_object_identity.py
+    expected_tests: [CRT-K1, CRT-K2, CRT-K6, CRT-K10, CRT-K11]
+    expected_status: KILLED
+    detection_mode: junit_failure
+    patch: mutants/MCTL-1_force_equivalent.patch
+    expected_changed_paths: [identity/policy.py]
+
+mutants:
+  M01:
+    title: remove identity revalidation
+    description: Remove the post-authorization object-identity revalidation before mutation.
+    severity: critical
+    invariants: [I7]
+    expected_suites:
+      - validation/adversarial/test_toctou_object_identity.py
+    expected_tests: [CRT-K1, CRT-K6, CRT-K10, CRT-K11]
+    detection_mode: junit_failure
+    patch: mutants/M01_remove_identity_revalidation.patch
+    expected_changed_paths: [governance/mutation_transaction.py]
+
+  M02:
+    title: indeterminate identity becomes equivalent
+    severity: critical
+    invariants: [I0, I7]
+    expected_suites: [validation/adversarial/test_toctou_object_identity.py]
+    expected_tests: [incomplete_identity, CRT-K11]
+    detection_mode: junit_failure
+    patch: mutants/M02_indeterminate_as_equivalent.patch
+
+  M03:
+    title: same-content different-inode treated as equivalent
+    severity: critical
+    invariants: [I7]
+    expected_suites: [validation/adversarial/test_toctou_object_identity.py]
+    expected_tests: [CRT-K2, CRT-K10]
+    detection_mode: junit_failure
+    patch: mutants/M03_content_overrides_identity.patch
+
+  M04:
+    title: remove protected hard-link alias detection
+    severity: critical
+    invariants: [I7a]
+    expected_suites: [validation/adversarial/test_toctou_object_identity.py]
+    expected_tests: [CRT-K3]
+    detection_mode: junit_failure
+    patch: mutants/M04_remove_hardlink_alias_detection.patch
+
+  M05:
+    title: remove proposal hash binding from receipt
+    severity: critical
+    invariants: [I8, C1]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L1]
+    detection_mode: junit_failure
+    patch: mutants/M05_remove_proposal_hash_binding.patch
+
+  M06:
+    title: remove pre-state authorization binding
+    description: Permit an authorization receipt to survive a governance-state change.
+    severity: critical
+    invariants: [I8a, C4]
+    expected_suites:
+      - validation/adversarial/test_authority_composition.py
+    expected_tests: [CRT-L4]
+    detection_mode: junit_failure
+    patch: mutants/M06_remove_pre_state_binding.patch
+    expected_changed_paths: [governance/composition.py]
+
+  M07:
+    title: allow P1 receipt to authorize P2
+    severity: critical
+    invariants: [I8, C1]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L1]
+    detection_mode: junit_failure
+    patch: mutants/M07_allow_receipt_laundering.patch
+
+  M08:
+    title: allow stale authorization after state change
+    severity: critical
+    invariants: [I8a, C4]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L4]
+    detection_mode: junit_failure
+    patch: mutants/M08_allow_stale_authorization.patch
+
+  M09:
+    title: allow ratification reuse across proposals
+    severity: critical
+    invariants: [I8, C1]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L9]
+    detection_mode: junit_failure
+    patch: mutants/M09_allow_ratification_reuse.patch
+
+  M10:
+    title: allow authorization replay / double execution
+    severity: critical
+    invariants: [I8b]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L13]
+    detection_mode: junit_failure
+    patch: mutants/M10_allow_authorization_replay.patch
+
+  M11:
+    title: disable Ed25519 domain separation
+    severity: high
+    invariants: [cryptographic_binding]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M11_disable_domain_separation.patch
+
+  M12:
+    title: accept revoked key for new authority
+    severity: high
+    invariants: [trust, revocation]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M12_accept_revoked_key.patch
+
+  M13:
+    title: remove trust-root version/context validation
+    severity: high
+    invariants: [I8a]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L11]
+    detection_mode: junit_failure
+    patch: mutants/M13_remove_trust_root_validation.patch
+
+  M14:
+    title: allow AuthorityDelta > 0 on INDETERMINATE
+    severity: critical
+    invariants: [I0, I5]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M14_authority_on_indeterminate.patch
+
+  M15:
+    title: allow timeout fallback to promotion
+    severity: critical
+    invariants: [I0]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M15_timeout_promotes.patch
+
+  M16:
+    title: allow exception path to retain authorization
+    severity: critical
+    invariants: [I0]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M16_exception_retains_auth.patch
+
+  M17:
+    title: skip post-run payload manifest comparison
+    severity: high
+    invariants: [I10]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M17_skip_manifest_comparison.patch
+
+  M18:
+    title: treat artifact mutation as ordinary PASS
+    severity: high
+    invariants: [I10]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M18_artifact_mutation_pass.patch
+
+  M19:
+    title: remove symlink/object-type from integrity snapshot
+    severity: high
+    invariants: [I7]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M19_remove_object_type_from_snapshot.patch
+
+  M20:
+    title: remove external anchor monotonicity
+    severity: high
+    invariants: [ledger]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M20_remove_anchor_monotonicity.patch
+
+  M21:
+    title: accept stale but authentic anchor
+    severity: high
+    invariants: [ledger]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M21_accept_stale_anchor.patch
+
+  M22:
+    title: treat missing anchor as CLEAN
+    severity: high
+    invariants: [ledger]
+    expected_suites: []
+    expected_tests: []
+    detection_mode: junit_failure
+    patch: mutants/M22_missing_anchor_clean.patch
+
+  M23:
+    title: skip composition invariant re-evaluation
+    severity: critical
+    invariants: [I9, C5]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L6]
+    detection_mode: junit_failure
+    patch: mutants/M23_skip_composition_reeval.patch
+
+  M24:
+    title: assume sequential safety from individual permits
+    severity: critical
+    invariants: [I9, C4]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L4, CRT-L6]
+    detection_mode: junit_failure
+    patch: mutants/M24_assume_sequential_safety.patch
+
+  M25:
+    title: permit authority inheritance from prior proposal
+    severity: critical
+    invariants: [I8, C2]
+    expected_suites: [validation/adversarial/test_authority_composition.py]
+    expected_tests: [CRT-L2]
+    detection_mode: junit_failure
+    patch: mutants/M25_permit_authority_inheritance.patch
