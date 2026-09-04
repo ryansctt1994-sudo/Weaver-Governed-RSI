@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .venv/
+*.egg-info/
 mutation/reports/*.json
 mutation/reports/**/*.xml
 mutation/reports/**/*.json
