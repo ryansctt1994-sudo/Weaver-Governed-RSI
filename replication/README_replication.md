@@ -13,12 +13,12 @@ results.
 4. Extract `source.tar.gz` into a new directory or disposable VM.
 5. Copy the verified `PAYLOAD_MANIFEST.sha256` beside the extracted source root. The manifest
    intentionally does not list itself.
-6. Record OS, CPU architecture, Python runtime, dependencies, and source digest. Use
-   `python tools/environment_fingerprint.py --output /path/outside/artifact/environment.json`
-   for the machine-captured environment fingerprint.
+6. Record OS, CPU architecture, Python runtime, dependencies, and source digest. Write the
+   machine-captured environment fingerprint to a path outside the artifact root, for example:
+   `python tools/environment_fingerprint.py --output ../replication-evidence/environment.json`.
 7. Generate a new Ed25519 replicator key locally. Never accept a private key from the producer.
-8. Run `python replication/capture_run.py --evidence-dir /path/outside/artifact/evidence` from
-   the extracted source without modifying the payload. The evidence directory is required to be
+8. Run `python replication/capture_run.py --evidence-dir ../replication-evidence` from the
+   extracted source without modifying the payload. The evidence directory is required to be
    outside the artifact root. The helper invokes `replication/run_all.sh` and writes
    `replication-run.json`, `replication.stdout.log`, and `replication.stderr.log`.
 9. Preserve all three generated files. The JSON records the exact argv, exit code, and SHA-256
