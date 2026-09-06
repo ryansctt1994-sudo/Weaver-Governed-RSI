@@ -14,14 +14,15 @@ results.
 5. Copy the verified `PAYLOAD_MANIFEST.sha256` beside the extracted source root. The manifest
    intentionally does not list itself.
 6. Record OS, CPU architecture, Python runtime, dependencies, and source digest. Use
-   `python tools/environment_fingerprint.py --output environment.json` for the machine-captured
-   environment fingerprint.
+   `python tools/environment_fingerprint.py --output /path/outside/artifact/environment.json`
+   for the machine-captured environment fingerprint.
 7. Generate a new Ed25519 replicator key locally. Never accept a private key from the producer.
-8. Run `python replication/capture_run.py --output replication-run.json` from the extracted
-   source without modifying the payload. This invokes `replication/run_all.sh` and records the
-   exact argv, exit code, and SHA-256 hashes of stdout and stderr.
-9. Preserve the raw stdout and stderr alongside `replication-run.json`; hashes are evidence of
-   identity, not substitutes for the raw logs.
+8. Run `python replication/capture_run.py --evidence-dir /path/outside/artifact/evidence` from
+   the extracted source without modifying the payload. The evidence directory is required to be
+   outside the artifact root. The helper invokes `replication/run_all.sh` and writes
+   `replication-run.json`, `replication.stdout.log`, and `replication.stderr.log`.
+9. Preserve all three generated files. The JSON records the exact argv, exit code, and SHA-256
+   hashes of stdout and stderr; the hashes identify the raw logs but do not replace them.
 10. Fill and sign a replication receipt conforming to the JSON schema, copying only
     machine-captured fields from the generated evidence where applicable.
 11. Submit the receipt, public key, environment capture, raw logs, relationship disclosure, and
