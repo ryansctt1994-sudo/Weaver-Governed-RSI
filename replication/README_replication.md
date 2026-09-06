@@ -13,25 +13,38 @@ results.
 4. Extract `source.tar.gz` into a new directory or disposable VM.
 5. Copy the verified `PAYLOAD_MANIFEST.sha256` beside the extracted source root. The manifest
    intentionally does not list itself.
-6. Record OS, CPU architecture, Python runtime, dependencies, and source digest.
+6. Record OS, CPU architecture, Python runtime, dependencies, and source digest. Use
+   `python tools/environment_fingerprint.py --output environment.json` for the machine-captured
+   environment fingerprint.
 7. Generate a new Ed25519 replicator key locally. Never accept a private key from the producer.
-8. Run `replication/run_all.sh` from the extracted source without modifying the payload.
-9. Record exact argv, exit states, and hashes of stdout and stderr.
-10. Fill and sign a replication receipt conforming to the JSON schema.
-11. Submit the receipt, public key, raw logs, relationship disclosure, and deviations for
-    Evidence Registry review.
+8. Run `python replication/capture_run.py --output replication-run.json` from the extracted
+   source without modifying the payload. This invokes `replication/run_all.sh` and records the
+   exact argv, exit code, and SHA-256 hashes of stdout and stderr.
+9. Preserve the raw stdout and stderr alongside `replication-run.json`; hashes are evidence of
+   identity, not substitutes for the raw logs.
+10. Fill and sign a replication receipt conforming to the JSON schema, copying only
+    machine-captured fields from the generated evidence where applicable.
+11. Submit the receipt, public key, environment capture, raw logs, relationship disclosure, and
+    deviations for Evidence Registry review.
 
 ## Result semantics
 
-- A known failed assertion yields `FAIL`.
+- A known failed assertion yields `FAIL` and exit code `1`.
 - Missing manifests or unverified artifact identity yield `FAIL` because package identity is
   required by the replication contract.
-- Instrument/environment failure yields `INDETERMINATE`.
-- Artifact mutation during validation yields `INDETERMINATE_ARTIFACT_MUTATION`.
+- Instrument/environment failure yields `INDETERMINATE` and exit code `3`.
+- Artifact mutation during validation yields `INDETERMINATE_ARTIFACT_MUTATION` and exit code `4`.
 - A known failure takes precedence over simultaneous indeterminacy in the aggregate result.
+- Unknown nonzero runner exits are treated as `FAIL`; they must not be silently promoted to an
+  indeterminate or passing result.
 
 ## Independence disclosure
 
 State employment, contracting, funding, family, organizational, infrastructure, and key-
 custody relationships with the producer. The registry—not the replicator—decides whether the
 receipt supports an independent tier.
+
+The producer must not supply the replicator private key, pre-filled relationship disclosure,
+replicator identity, or a replacement raw log set. Shared infrastructure, shared credentials,
+producer-operated execution, or undisclosed material relationships must be reported as
+deviations and evaluated before any independent evidence tier is considered.
