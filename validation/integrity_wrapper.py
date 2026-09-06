@@ -27,6 +27,11 @@ EXCLUDED_PARTS = {
     "mutants",
 }
 
+EXIT_PASS = 0
+EXIT_FAIL = 1
+EXIT_INDETERMINATE = 3
+EXIT_ARTIFACT_MUTATION = 4
+
 
 def snapshot(root: Path) -> dict[str, str]:
     result: dict[str, str] = {}
@@ -47,15 +52,21 @@ def run_wrapped(root: Path, command: Iterable[str]) -> tuple[int, dict[str, obje
         # The caller deliberately supplies argv; shell execution is disabled.
         completed = subprocess.run(tuple(command), cwd=root, check=False)  # nosec
     except OSError as exc:
-        return 3, {"status": "INDETERMINATE_INSTRUMENT", "reason": type(exc).__name__}
+        return EXIT_INDETERMINATE, {
+            "status": "INDETERMINATE_INSTRUMENT",
+            "reason": type(exc).__name__,
+        }
     after = snapshot(root)
     if before != after:
         changed = sorted(set(before) | set(after))
         changed = [path for path in changed if before.get(path) != after.get(path)]
-        return 3, {"status": "INDETERMINATE_ARTIFACT_MUTATION", "changed": changed}
+        return EXIT_ARTIFACT_MUTATION, {
+            "status": "INDETERMINATE_ARTIFACT_MUTATION",
+            "changed": changed,
+        }
     if completed.returncode != 0:
-        return 1, {"status": "FAIL", "wrapped_exit": completed.returncode}
-    return 0, {"status": "PASS", "wrapped_exit": 0}
+        return EXIT_FAIL, {"status": "FAIL", "wrapped_exit": completed.returncode}
+    return EXIT_PASS, {"status": "PASS", "wrapped_exit": 0}
 
 
 def main() -> int:
