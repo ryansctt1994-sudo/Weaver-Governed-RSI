@@ -32,6 +32,8 @@ test_exit=$?
 if [[ $test_exit -eq 1 ]]; then
   failed=1
 elif [[ $test_exit -eq 3 ]]; then
+  indeterminate=1
+elif [[ $test_exit -eq 4 ]]; then
   artifact_mutation=1
 elif [[ $test_exit -ne 0 ]]; then
   failed=1
@@ -43,7 +45,7 @@ if [[ $failed -eq 1 ]]; then
 fi
 if [[ $artifact_mutation -eq 1 ]]; then
   echo "REPLICATION RESULT: INDETERMINATE_ARTIFACT_MUTATION"
-  exit 3
+  exit 4
 fi
 if [[ $indeterminate -eq 1 ]]; then
   echo "REPLICATION RESULT: INDETERMINATE"
