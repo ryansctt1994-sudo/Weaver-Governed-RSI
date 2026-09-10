@@ -7,7 +7,6 @@ import argparse
 import hashlib
 import json
 import subprocess  # nosec B404
-import sys
 from pathlib import Path
 
 RESULT_BY_EXIT = {
@@ -23,13 +22,13 @@ def sha256_bytes(data: bytes) -> str:
 
 
 def capture(root: Path, argv: list[str]) -> tuple[int, dict[str, object], bytes, bytes]:
+    """Capture an operator-selected command; argv is trusted and no shell is used."""
     try:
-        completed = subprocess.run(  # nosec B603
+        completed = subprocess.run(  # noqa: S603  # nosec B603
             argv,
             cwd=root,
             check=False,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
         )
     except OSError as exc:
         stderr = type(exc).__name__.encode("utf-8")
@@ -91,7 +90,9 @@ def main() -> int:
 
     stdout_path.write_bytes(stdout)
     stderr_path.write_bytes(stderr)
-    fragment_path.write_text(json.dumps(fragment, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    fragment_path.write_text(
+        json.dumps(fragment, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
     return code
 
 

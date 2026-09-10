@@ -30,6 +30,8 @@ results.
 
 ## Result semantics
 
+- Successful manifest verification and validation yield `PASS` and exit code `0`.
+  This result applies only to the executed checks; independent evidence still requires review.
 - A known failed assertion yields `FAIL` and exit code `1`.
 - Missing manifests or unverified artifact identity yield `FAIL` because package identity is
   required by the replication contract.

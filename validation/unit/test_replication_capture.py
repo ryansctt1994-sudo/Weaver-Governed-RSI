@@ -23,7 +23,10 @@ def test_capture_hashes_and_returns_raw_stdout_stderr(tmp_path: Path) -> None:
     )
 
     code, fragment, stdout, stderr = capture(tmp_path, ["python", str(script)])
-    command = fragment["commands"][0]
+    commands = fragment["commands"]
+    assert isinstance(commands, list)
+    command = commands[0]
+    assert isinstance(command, dict)
 
     assert code == 1
     assert fragment["result"] == "FAIL"

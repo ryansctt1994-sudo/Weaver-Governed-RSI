@@ -75,6 +75,9 @@ warn_unreachable = true
 source_paths = ["kernel/", "validation/evidence_registry.py"]
 do_not_mutate = ["kernel/verifier.py"]
 also_copy = [
+  "replication/",
+  "schemas/",
+  "validation/integrity_wrapper.py",
   "validation/portfolio_audit.py",
   "validation/unit/",
   "validation/integration/",
