@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ryansctt1994-sudo/Weaver-Governed-RSI/blob/main/schemas/evidence_claim.schema.json",
+  "title": "Evidence promotion claim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "claim_id",
+    "artifact_sha256",
+    "producer_id",
+    "evaluator_id",
+    "target_tier",
+    "result",
+    "environment_fingerprint"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "claim_id": { "type": "string", "minLength": 1 },
+    "artifact_sha256": { "$ref": "#/$defs/sha256" },
+    "producer_id": { "type": "string", "minLength": 1 },
+    "evaluator_id": { "type": "string", "minLength": 1 },
+    "target_tier": { "enum": ["E0", "E1", "E2", "E3", "E4", "E5"] },
+    "result": { "enum": ["PASS", "FAIL", "INDETERMINATE"] },
+    "receipt_sha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+    "environment_fingerprint": { "type": "string", "minLength": 1 },
+    "independent": { "type": "boolean", "default": false },
+    "heterogeneous": { "type": "boolean", "default": false },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

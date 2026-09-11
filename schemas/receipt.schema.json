@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ryansctt1994-sudo/Weaver-Governed-RSI/blob/main/schemas/receipt.schema.json",
+  "title": "Weaver transition receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "proposal_digest",
+    "transition",
+    "actor_id",
+    "recorded_at",
+    "previous_hash",
+    "record_hash"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "proposal_id": { "type": "string", "minLength": 1 },
+    "proposal_digest": { "$ref": "#/$defs/sha256" },
+    "transition": {
+      "enum": [
+        "submit",
+        "block",
+        "validation_pass",
+        "validation_fail",
+        "validation_indeterminate",
+        "ratify",
+        "reject",
+        "apply",
+        "artifact_mismatch",
+        "revoke"
+      ]
+    },
+    "actor_id": { "type": "string", "minLength": 1 },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "previous_hash": { "$ref": "#/$defs/sha256" },
+    "record_hash": { "$ref": "#/$defs/sha256" },
+    "details": { "type": "object" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

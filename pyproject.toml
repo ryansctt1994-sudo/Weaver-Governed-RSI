@@ -1,0 +1,99 @@
+[build-system]
+requires = ["setuptools>=75", "wheel>=0.44"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weaver-governed-rsi"
+version = "0.1.0"
+description = "Research prototype for governed bounded recursive self-improvement"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Ryan Scott" }]
+keywords = [
+  "ai-safety",
+  "ai-governance",
+  "recursive-self-improvement",
+  "reproducibility",
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = ["cryptography>=50.0.0,<51"]
+
+[project.optional-dependencies]
+dev = [
+  "bandit>=1.8,<2",
+  "build>=1.2.2,<2",
+  "hypothesis>=6.130,<7",
+  "jsonschema>=4.23,<5",
+  "mypy>=1.15,<2",
+  "pip-audit>=2.9,<3",
+  "pre-commit>=4.2,<5",
+  "pytest>=9.0.3,<10",
+  "ruff>=0.11,<1",
+  "types-jsonschema>=4.23,<5",
+]
+mutation = ["mutmut>=3.3,<4"]
+
+[tool.setuptools.packages.find]
+include = ["anchors*", "kernel*", "release*", "replication*", "tools*", "validation*"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["validation", "tests"]
+markers = [
+  "adversarial: constitutional or cryptographic adversarial case",
+  "concurrency: serialization or race-focused case",
+  "integration: multi-component integration case",
+  "property: property or state-space case",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "C4", "SIM"]
+ignore = ["S101", "S105"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S"]
+"validation/**/test_*.py" = ["S"]
+"validation/integrity_wrapper.py" = ["S603"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+
+[tool.mutmut]
+source_paths = ["kernel/", "validation/evidence_registry.py"]
+do_not_mutate = ["kernel/verifier.py"]
+also_copy = [
+  "replication/",
+  "schemas/",
+  "validation/integrity_wrapper.py",
+  "validation/portfolio_audit.py",
+  "validation/unit/",
+  "validation/integration/",
+  "validation/adversarial/",
+  "validation/properties/",
+  "validation/concurrency/",
+  "validation/mutation/",
+]
+pytest_add_cli_args_test_selection = [
+  "validation/unit/",
+  "validation/integration/",
+  "validation/adversarial/test_mgre_a1_a8.py",
+  "validation/adversarial/test_mgre_adversarial.py",
+  "validation/adversarial/test_crt_matrix.py",
+  "validation/properties/",
+  "validation/concurrency/",
+]
+mutate_only_covered_lines = true
+on_dependency_change = "rerun"

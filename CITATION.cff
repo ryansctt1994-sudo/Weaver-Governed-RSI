@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this research prototype, cite the repository and the exact release commit."
+title: "Weaver Governed RSI"
+type: software
+authors:
+  - family-names: "Scott"
+    given-names: "Ryan"
+repository-code: "https://github.com/ryansctt1994-sudo/Weaver-Governed-RSI"
+license: MIT
+version: 0.1.0
+keywords:
+  - AI governance
+  - recursive self-improvement
+  - reproducibility
+  - red teaming
+  - cryptographic evidence
+abstract: >-
+  Research prototype for testing authority separation, replayable evidence, adversarial
+  validation, and reproducible release boundaries around bounded recursive self-improvement.

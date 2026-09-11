@@ -1,0 +1,23 @@
+schema_version: "1.0"
+invariants:
+  - id: I-01
+    statement: "Capability does not imply authority."
+    fail_closed: true
+  - id: I-02
+    statement: "A proposal does not execute before validation and ratification."
+    fail_closed: true
+  - id: I-03
+    statement: "No actor may authorize its own authority or trust-boundary expansion."
+    fail_closed: true
+  - id: I-04
+    statement: "An evidence producer may not evaluate its own promotion claim."
+    fail_closed: true
+  - id: I-05
+    statement: "Indeterminate evidence grants no authority."
+    fail_closed: true
+  - id: I-06
+    statement: "A valid revocation blocks pending application."
+    fail_closed: true
+  - id: I-07
+    statement: "Evaluated and released artifacts are identified by cryptographic digest."
+    fail_closed: true

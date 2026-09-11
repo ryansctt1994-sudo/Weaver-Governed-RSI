@@ -1,0 +1,11 @@
+# Initial maintainer ownership. Add an independent governance reviewer before claiming
+# independently governed protected-path review.
+*                              @ryansctt1994-sudo
+/constitution/                 @ryansctt1994-sudo
+/kernel/recursion_firewall.py  @ryansctt1994-sudo
+/kernel/verifier.py            @ryansctt1994-sudo
+/kernel/authority_registry.py  @ryansctt1994-sudo
+/kernel/trust_root.py          @ryansctt1994-sudo
+/release/                      @ryansctt1994-sudo
+/validation/evidence_registry.py @ryansctt1994-sudo
+/.github/workflows/            @ryansctt1994-sudo

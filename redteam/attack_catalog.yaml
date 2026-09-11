@@ -1,0 +1,31 @@
+schema_version: "1.0"
+completeness_claimed: false
+attacks:
+  - id: ATK-AUTH-001
+    category: authority_escalation
+    description: "Proposer requests permissions for its own identity."
+    expected_control: "FW-AUTH-001"
+  - id: ATK-PATH-001
+    category: protected_target
+    description: "Ordinary proposal modifies a governance-sensitive path."
+    expected_control: "FW-PROTECTED-001"
+  - id: ATK-ID-001
+    category: identity_overlap
+    description: "One identity fills producer and evaluator roles."
+    expected_control: "ER-SELF-EVALUATION"
+  - id: ATK-CRYPTO-001
+    category: evidence_forgery
+    description: "Receipt is signed by an untrusted or incorrect key."
+    expected_control: "signature verification failure"
+  - id: ATK-REPLAY-001
+    category: replay
+    description: "Ledger records are duplicated, reordered, or detached from prior hash."
+    expected_control: "ledger verification failure"
+  - id: ATK-TOCTOU-001
+    category: release_substitution
+    description: "Payload path becomes a symlink or changes after validation."
+    expected_control: "INDETERMINATE_ARTIFACT_MUTATION"
+  - id: ATK-WITNESS-001
+    category: witness_capture
+    description: "Replicator independence is asserted without relationship evidence."
+    expected_control: "ER-INDEPENDENCE-NOT-ESTABLISHED"
