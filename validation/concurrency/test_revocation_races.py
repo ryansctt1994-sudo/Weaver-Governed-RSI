@@ -49,13 +49,17 @@ class RevocationRaceTests(unittest.TestCase):
         self.assertEqual("RACE-001", receipt.record.event["proposal_id"])
         self.assertEqual("revoke", receipt.record.event["transition"])
         self.assertEqual("revoker", receipt.record.event["actor_id"])
-        with self.assertRaisesRegex(PermissionError, "proposal authority was revoked"):
+        records_before = kernel.ledger.records
+        with self.assertRaisesRegex(PermissionError, "^proposal authority was revoked$"):
             kernel.apply(
                 proposal.proposal_id,
                 applicator_id="applicator",
                 observed_proposal_digest=proposal.digest,
                 recorded_at="2026-08-12T00:00:04Z",
             )
+        self.assertEqual(ProposalState.REJECTED, kernel.state(proposal.proposal_id))
+        self.assertEqual(records_before, kernel.ledger.records)
+        self.assertTrue(kernel.ledger.verify().valid)
 
 
 if __name__ == "__main__":
