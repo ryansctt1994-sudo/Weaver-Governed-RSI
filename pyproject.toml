@@ -72,7 +72,7 @@ strict = true
 warn_unreachable = true
 
 [tool.mutmut]
-source_paths = ["kernel/", "validation/evidence_registry.py"]
+source_paths = ["kernel/", "experiments/", "validation/evidence_registry.py"]
 do_not_mutate = ["kernel/verifier.py"]
 also_copy = [
   "replication/",
