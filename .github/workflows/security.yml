@@ -23,7 +23,7 @@ jobs:
       - run: python -m pip install --require-hashes -r requirements.lock
       - run: pip-audit -r requirements.lock --require-hashes
       - run: >-
-          bandit -q -r kernel validation release replication anchors tools
+          bandit -q -r kernel validation release replication anchors tools experiments
           -x validation/unit,validation/integration,validation/adversarial,validation/properties,validation/concurrency
 
   ci-7-crypto-adversarial:

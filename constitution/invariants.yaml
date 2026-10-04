@@ -21,3 +21,15 @@ invariants:
   - id: I-07
     statement: "Evaluated and released artifacts are identified by cryptographic digest."
     fail_closed: true
+  - id: I-08
+    statement: "A successor does not inherit evidence tier or authority from its parent."
+    fail_closed: true
+  - id: I-09
+    statement: "Recursive candidates may not modify evaluator or hidden-evaluation identity."
+    fail_closed: true
+  - id: I-10
+    statement: "Insufficient evaluator sufficiency withholds retention."
+    fail_closed: true
+  - id: I-11
+    statement: "Rejected or withheld candidates do not change active protected state."
+    fail_closed: true

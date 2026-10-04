@@ -41,7 +41,7 @@ dev = [
 mutation = ["mutmut>=3.3,<4"]
 
 [tool.setuptools.packages.find]
-include = ["anchors*", "kernel*", "release*", "replication*", "tools*", "validation*"]
+include = ["anchors*", "experiments*", "kernel*", "release*", "replication*", "tools*", "validation*"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
@@ -72,7 +72,7 @@ strict = true
 warn_unreachable = true
 
 [tool.mutmut]
-source_paths = ["kernel/", "validation/evidence_registry.py"]
+source_paths = ["kernel/", "experiments/", "validation/evidence_registry.py"]
 do_not_mutate = ["kernel/verifier.py"]
 also_copy = [
   "replication/",
