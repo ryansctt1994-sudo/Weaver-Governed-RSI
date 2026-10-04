@@ -33,3 +33,9 @@ invariants:
   - id: I-11
     statement: "Rejected or withheld candidates do not change active protected state."
     fail_closed: true
+  - id: I-12
+    statement: "The candidate trust domain cannot read hidden evaluation material or evaluator signing keys."
+    fail_closed: true
+  - id: I-13
+    statement: "Retention consumes only evaluator results whose signatures verify."
+    fail_closed: true
