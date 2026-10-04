@@ -41,7 +41,7 @@ dev = [
 mutation = ["mutmut>=3.3,<4"]
 
 [tool.setuptools.packages.find]
-include = ["anchors*", "kernel*", "release*", "replication*", "tools*", "validation*"]
+include = ["anchors*", "experiments*", "kernel*", "release*", "replication*", "tools*", "validation*"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
