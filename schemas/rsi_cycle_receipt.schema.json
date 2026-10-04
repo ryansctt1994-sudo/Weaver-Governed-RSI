@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WGRSI-RC1 cycle receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "previous_receipt_sha256",
+    "baseline_sha256",
+    "candidate_sha256",
+    "evaluator_sha256",
+    "hidden_eval_sha256",
+    "verdict",
+    "reasons",
+    "capability_delta",
+    "recursive_gain_delta",
+    "sufficiency_score",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "previous_receipt_sha256": { "$ref": "#/$defs/sha256" },
+    "baseline_sha256": { "$ref": "#/$defs/sha256" },
+    "candidate_sha256": { "$ref": "#/$defs/sha256" },
+    "evaluator_sha256": { "$ref": "#/$defs/sha256" },
+    "hidden_eval_sha256": { "$ref": "#/$defs/sha256" },
+    "verdict": { "enum": ["ACCEPT", "REJECT", "WITHHOLD"] },
+    "reasons": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "capability_delta": { "type": "number" },
+    "recursive_gain_delta": { "type": "number" },
+    "sufficiency_score": { "type": "number", "minimum": 0, "maximum": 1 },
+    "receipt_sha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
