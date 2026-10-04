@@ -39,3 +39,15 @@ invariants:
   - id: I-13
     statement: "Retention consumes only evaluator results whose signatures verify."
     fail_closed: true
+  - id: I-14
+    statement: "Self-generated feedback is a candidate hypothesis, not trusted evidence."
+    fail_closed: true
+  - id: I-15
+    statement: "Insight admission requires provenance binding to verifier-observed failure evidence."
+    fail_closed: true
+  - id: I-16
+    statement: "Assisted performance does not count as internalized capability without no-context and held-out transfer."
+    fail_closed: true
+  - id: I-17
+    statement: "Authority-seeking, evaluator-tampering, or hidden-evaluation-seeking insights are rejected."
+    fail_closed: true
