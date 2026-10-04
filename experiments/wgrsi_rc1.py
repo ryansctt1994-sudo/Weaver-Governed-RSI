@@ -202,7 +202,19 @@ class CycleReceipt:
             "sufficiency_score": decision.sufficiency_score,
         }
         digest = hashlib.sha256(_canonical_json(body)).hexdigest()
-        return cls(receipt_sha256=digest, **body)  # type: ignore[arg-type]
+        return cls(
+            previous_receipt_sha256=previous_receipt_sha256,
+            baseline_sha256=baseline.artifact_sha256,
+            candidate_sha256=candidate.artifact_sha256,
+            evaluator_sha256=evaluator_sha256,
+            hidden_eval_sha256=hidden_eval_sha256,
+            verdict=decision.verdict.value,
+            reasons=decision.reasons,
+            capability_delta=decision.capability_delta,
+            recursive_gain_delta=decision.recursive_gain_delta,
+            sufficiency_score=decision.sufficiency_score,
+            receipt_sha256=digest,
+        )
 
     def verify(self) -> bool:
         body = asdict(self)
