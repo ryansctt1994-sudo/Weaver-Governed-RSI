@@ -54,12 +54,33 @@ record.
 
 ## Validation snapshot
 
-Local candidate run (2026-08-12; not registry-accepted): **70 tests passed with 9
-subtests**, and **379 of 382 mutants were killed (99.21%)**. The three survivors are
-reviewed equivalent JSON-encoder substitutions documented in
-[`validation/mutation/critical_mutants.md`](validation/mutation/critical_mutants.md). No
-signed receipt has been accepted for this tree, so these counts do not promote the repository
-above E0.
+### RC3 candidate branch — current bounded result
+
+On branch `agent/wgrsi-rc3-insight-internalization` at
+`51b2621017bd644e2aff260b8683ab208b4f1f7e`, the PR #6 record reports:
+
+- **116 local tests + 9 subtests passed**;
+- whole-tree Ruff / format, strict mypy over 67 files, Bandit, and hash-locked
+  dependency resolution passed;
+- **seven hosted workflows passed**: Core CI, Property/State-Machine Tests,
+  Release Integrity, Security/Cryptography, RC2 separate-UID isolation,
+  RC3 internalization, and Mutation Tests.
+
+This is a candidate-branch result on top of the RC2 lineage, not `main`.
+Local mutation metadata still contained unchecked entries, so **no local mutation-gate
+PASS is claimed**. Hosted success is recorded separately. No independent witness,
+general RSI capability, production authority, or portfolio promotion is inferred.
+
+### Earlier baseline record
+
+A 2026-08-12 local candidate record reported **70 tests with 9 subtests** and
+**379 of 382 mutants killed (99.21%)**; the three survivors were reviewed as equivalent
+JSON-encoder substitutions in
+[`validation/mutation/critical_mutants.md`](validation/mutation/critical_mutants.md).
+That older record is historical context, not the current branch result.
+
+No signed receipt has been accepted for this tree, so neither record promotes the
+repository above E0.
 
 The initial baseline includes executable tests for:
 
