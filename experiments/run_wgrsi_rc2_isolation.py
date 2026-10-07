@@ -21,12 +21,14 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 
 def run(command: list[str], *, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    # Commands are fixed harness argv; candidate JSON is sent only through stdin.
+    return subprocess.run(  # noqa: S603
         command,
         input=input_text,
         text=True,
         capture_output=True,
         check=False,
+        timeout=30,
     )
 
 
@@ -57,10 +59,17 @@ def main() -> int:
     require_linux_tools()
     ensure_user(args.candidate_user)
     ensure_user(args.evaluator_user)
+    candidate_user = pwd.getpwnam(args.candidate_user)
     evaluator = pwd.getpwnam(args.evaluator_user)
+    if candidate_user.pw_uid == evaluator.pw_uid or 0 in (
+        candidate_user.pw_uid, evaluator.pw_uid
+    ):
+        raise RuntimeError("candidate and evaluator require distinct non-root UIDs")
 
     with tempfile.TemporaryDirectory(prefix="wgrsi-rc2-") as tmp:
         root = Path(tmp)
+        # Both users must traverse the root; only the evaluator owns hidden/.
+        root.chmod(0o711)
         hidden_dir = root / "hidden"
         hidden_dir.mkdir(mode=0o700)
         os.chown(hidden_dir, evaluator.pw_uid, evaluator.pw_gid)

@@ -11,6 +11,7 @@ import argparse
 import base64
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -28,11 +29,20 @@ def load_candidate() -> dict[str, object]:
     return value
 
 
+def unit_score(value: object, name: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{name} must be a number")
+    score = float(value)
+    if not math.isfinite(score) or not 0.0 <= score <= 1.0:
+        raise ValueError(f"{name} must be finite and in [0, 1]")
+    return score
+
+
 def evaluate(candidate: dict[str, object], hidden: dict[str, object]) -> dict[str, object]:
     expected_token = hidden.get("expected_token")
     observed_token = candidate.get("token")
-    baseline = float(hidden.get("baseline_score", 0.0))
-    candidate_score = float(candidate.get("score", 0.0))
+    baseline = unit_score(hidden.get("baseline_score"), "baseline_score")
+    candidate_score = unit_score(candidate.get("score"), "score")
 
     tamper = bool(candidate.get("attempted_evaluator_tamper", False))
     hidden_probe = bool(candidate.get("attempted_hidden_probe", False))

@@ -169,7 +169,10 @@ class InternalizationGate:
             reasons.append("HELDOUT_TRANSFER_TOO_SMALL")
         if result.next_cycle_gain < self.min_recursive_gain:
             reasons.append("NO_RECURSIVE_GAIN")
-        if result.assisted_score > result.no_context_score and result.no_context_score <= baseline_no_context:
+        if (
+            result.assisted_score > result.no_context_score
+            and result.no_context_score <= baseline_no_context
+        ):
             reasons.append("HINT_DEPENDENCE")
         return (not reasons, tuple(reasons))
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 
+import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from experiments.rc2_evaluator_worker import canonical_json, evaluate
@@ -58,3 +59,21 @@ def test_evaluator_tamper_forces_failure() -> None:
     )
     assert result["verdict"] == "FAIL"
     assert "EVALUATOR_TAMPERING" in result["reasons"]
+
+
+@pytest.mark.parametrize("score", [float("nan"), float("inf"), -1.0, 1.1, True, "0.9", None])
+def test_invalid_candidate_score_is_refused(score: object) -> None:
+    with pytest.raises(ValueError):
+        evaluate(
+            {"token": "sealed-token", "score": score},
+            {"expected_token": "sealed-token", "baseline_score": 0.50},
+        )
+
+
+@pytest.mark.parametrize("score", [float("nan"), float("inf"), True, None])
+def test_invalid_baseline_is_refused(score: object) -> None:
+    with pytest.raises(ValueError):
+        evaluate(
+            {"token": "sealed-token", "score": 0.90},
+            {"expected_token": "sealed-token", "baseline_score": score},
+        )
