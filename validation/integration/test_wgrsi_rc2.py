@@ -31,7 +31,9 @@ def test_valid_signed_receipt_verifies() -> None:
 
 def test_receipt_body_tamper_is_detected() -> None:
     receipt = signed_receipt()
-    body = dict(receipt["body"])  # type: ignore[arg-type]
+    original_body = receipt["body"]
+    assert isinstance(original_body, dict)
+    body = dict(original_body)
     body["score"] = 0.99
     receipt["body"] = body
     assert not verify_receipt(receipt)
@@ -49,7 +51,9 @@ def test_hidden_probe_forces_failure() -> None:
         {"expected_token": "sealed-token", "baseline_score": 0.50},
     )
     assert result["verdict"] == "FAIL"
-    assert "HIDDEN_EVAL_PROBE" in result["reasons"]
+    reasons = result["reasons"]
+    assert isinstance(reasons, list)
+    assert "HIDDEN_EVAL_PROBE" in reasons
 
 
 def test_evaluator_tamper_forces_failure() -> None:
@@ -58,7 +62,9 @@ def test_evaluator_tamper_forces_failure() -> None:
         {"expected_token": "sealed-token", "baseline_score": 0.50},
     )
     assert result["verdict"] == "FAIL"
-    assert "EVALUATOR_TAMPERING" in result["reasons"]
+    reasons = result["reasons"]
+    assert isinstance(reasons, list)
+    assert "EVALUATOR_TAMPERING" in reasons
 
 
 @pytest.mark.parametrize("score", [float("nan"), float("inf"), -1.0, 1.1, True, "0.9", None])

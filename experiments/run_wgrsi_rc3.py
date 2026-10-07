@@ -46,19 +46,25 @@ def main() -> int:
         result=eval_result,
     )
     passed = assessment.status.value == "ADMITTED" and internalized
-    print(json.dumps({
-        "status": "PASS" if passed else "FAIL",
-        "experiment": "WGRSI-RC3",
-        "failure_evidence_sha256": failure.digest,
-        "insight_sha256": candidate_insight.digest,
-        "insight_status": assessment.status.value,
-        "insight_reasons": assessment.reasons,
-        "no_context_score": eval_result.no_context_score,
-        "heldout_score": eval_result.heldout_score,
-        "recursive_gain": eval_result.recursive_gain,
-        "internalization_reasons": reasons,
-        "claim_boundary": "bounded-insight-internalization-experiment",
-    }, indent=2, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "status": "PASS" if passed else "FAIL",
+                "experiment": "WGRSI-RC3",
+                "failure_evidence_sha256": failure.digest,
+                "insight_sha256": candidate_insight.digest,
+                "insight_status": assessment.status.value,
+                "insight_reasons": assessment.reasons,
+                "no_context_score": eval_result.no_context_score,
+                "heldout_score": eval_result.heldout_score,
+                "recursive_gain": eval_result.recursive_gain,
+                "internalization_reasons": reasons,
+                "claim_boundary": "bounded-insight-internalization-experiment",
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
     return 0 if passed else 1
 
 

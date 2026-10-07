@@ -51,13 +51,17 @@ class FailureEvidence:
 
     @property
     def digest(self) -> str:
-        return _sha256_bytes(_canonical_json({
-            "task_sha256": self.task_sha256,
-            "attempt_sha256": self.attempt_sha256,
-            "verifier_output_sha256": self.verifier_output_sha256,
-            "verifier_identity_sha256": self.verifier_identity_sha256,
-            "failure_code": self.failure_code,
-        }))
+        return _sha256_bytes(
+            _canonical_json(
+                {
+                    "task_sha256": self.task_sha256,
+                    "attempt_sha256": self.attempt_sha256,
+                    "verifier_output_sha256": self.verifier_output_sha256,
+                    "verifier_identity_sha256": self.verifier_identity_sha256,
+                    "failure_code": self.failure_code,
+                }
+            )
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,14 +85,18 @@ class Insight:
 
     @property
     def digest(self) -> str:
-        return _sha256_bytes(_canonical_json({
-            "insight_id": self.insight_id,
-            "generation": self.generation,
-            "text": self.text,
-            "source_failure_sha256": self.source_failure_sha256,
-            "generator_sha256": self.generator_sha256,
-            "parent_insight_sha256s": list(self.parent_insight_sha256s),
-        }))
+        return _sha256_bytes(
+            _canonical_json(
+                {
+                    "insight_id": self.insight_id,
+                    "generation": self.generation,
+                    "text": self.text,
+                    "source_failure_sha256": self.source_failure_sha256,
+                    "generator_sha256": self.generator_sha256,
+                    "parent_insight_sha256s": list(self.parent_insight_sha256s),
+                }
+            )
+        )
 
 
 @dataclass(frozen=True, slots=True)

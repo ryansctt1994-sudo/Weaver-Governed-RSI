@@ -61,9 +61,7 @@ def main() -> int:
     ensure_user(args.evaluator_user)
     candidate_user = pwd.getpwnam(args.candidate_user)
     evaluator = pwd.getpwnam(args.evaluator_user)
-    if candidate_user.pw_uid == evaluator.pw_uid or 0 in (
-        candidate_user.pw_uid, evaluator.pw_uid
-    ):
+    if candidate_user.pw_uid == evaluator.pw_uid or 0 in (candidate_user.pw_uid, evaluator.pw_uid):
         raise RuntimeError("candidate and evaluator require distinct non-root UIDs")
 
     with tempfile.TemporaryDirectory(prefix="wgrsi-rc2-") as tmp:
@@ -86,22 +84,22 @@ def main() -> int:
             os.chmod(path, 0o600)
             os.chown(path, evaluator.pw_uid, evaluator.pw_gid)
 
-        candidate_probe = run(
-            ["runuser", "-u", args.candidate_user, "--", "cat", str(hidden)]
-        )
+        candidate_probe = run(["runuser", "-u", args.candidate_user, "--", "cat", str(hidden)])
         if candidate_probe.returncode == 0:
             print(json.dumps({"status": "FAIL", "reason": "candidate-read-hidden-suite"}))
             return 1
 
-        key_probe = run(
-            ["runuser", "-u", args.candidate_user, "--", "cat", str(key_path)]
-        )
+        key_probe = run(["runuser", "-u", args.candidate_user, "--", "cat", str(key_path)])
         if key_probe.returncode == 0:
             print(json.dumps({"status": "FAIL", "reason": "candidate-read-signing-key"}))
             return 1
 
         candidate = json.dumps({"token": "sealed-token", "score": 0.61})
-        worker_path = Path(__file__).with_name("rc2_evaluator_worker.py").resolve()
+        # Hosted runner workspaces need not be traversable by the evaluator UID.
+        # Copy only the public worker into the accessible harness directory.
+        worker_path = root / "rc2_evaluator_worker.py"
+        shutil.copyfile(Path(__file__).with_name("rc2_evaluator_worker.py"), worker_path)
+        worker_path.chmod(0o444)
         result = run(
             [
                 "runuser",
