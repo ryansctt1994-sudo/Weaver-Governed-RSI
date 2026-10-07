@@ -1,0 +1,14 @@
+# Gate Zero ownership scaffold
+# Metadata only: enforcement requires repository branch/ruleset settings.
+* @ryansctt1994-sudo
+
+# Present and future governance-sensitive surfaces
+/.github/ @ryansctt1994-sudo
+/constitution/ @ryansctt1994-sudo
+/kernel/ @ryansctt1994-sudo
+/validation/ @ryansctt1994-sudo
+/evidence/ @ryansctt1994-sudo
+/release/ @ryansctt1994-sudo
+/replication/ @ryansctt1994-sudo
+/GOVERNANCE.md @ryansctt1994-sudo
+/SECURITY.md @ryansctt1994-sudo
