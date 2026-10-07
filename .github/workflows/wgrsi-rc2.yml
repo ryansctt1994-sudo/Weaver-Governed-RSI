@@ -27,4 +27,4 @@ jobs:
           ruff check experiments validation/integration/test_wgrsi_rc1.py validation/integration/test_wgrsi_rc2.py
           mypy experiments --strict
       - name: Run isolated evaluator trust-domain proof
-        run: sudo -E python -m experiments.run_wgrsi_rc2_isolation
+        run: sudo -E "$(command -v python)" -m experiments.run_wgrsi_rc2_isolation

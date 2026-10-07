@@ -25,7 +25,14 @@ jobs:
           cache: pip
           cache-dependency-path: requirements.lock
       - run: python -m pip install --require-hashes -r requirements.lock
-      - run: mutmut run
+      - name: Run mutations with stable native cryptography imports
+        # mutmut's coverage pass unloads newly imported Python modules. Preload
+        # the native crypto backend so its exception classes keep their identity.
+        run: >-
+          python -c 'import cryptography.exceptions;
+          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey;
+          Ed25519PrivateKey.generate();
+          from mutmut.__main__ import cli; cli()' run
       - run: mutmut results
       - run: >-
           python validation/mutation/check_mutation_score.py

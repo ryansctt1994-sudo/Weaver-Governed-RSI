@@ -11,8 +11,10 @@ import argparse
 import json
 import os
 import pwd
+import re
+import secrets
 import shutil
-import subprocess
+import subprocess  # nosec B404
 import sys
 import tempfile
 from pathlib import Path
@@ -21,12 +23,14 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 
 def run(command: list[str], *, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
+    # Commands are fixed harness argv; candidate JSON is sent only through stdin.
+    return subprocess.run(  # noqa: S603  # nosec B603
         command,
         input=input_text,
         text=True,
         capture_output=True,
         check=False,
+        timeout=30,
     )
 
 
@@ -38,6 +42,8 @@ def require_linux_tools() -> None:
 
 
 def ensure_user(name: str) -> None:
+    if re.fullmatch(r"[a-z_][a-z0-9_-]{0,31}", name) is None:
+        raise ValueError("invalid harness username")
     try:
         pwd.getpwnam(name)
         return
@@ -57,18 +63,24 @@ def main() -> int:
     require_linux_tools()
     ensure_user(args.candidate_user)
     ensure_user(args.evaluator_user)
+    candidate_user = pwd.getpwnam(args.candidate_user)
     evaluator = pwd.getpwnam(args.evaluator_user)
+    if candidate_user.pw_uid == evaluator.pw_uid or 0 in (candidate_user.pw_uid, evaluator.pw_uid):
+        raise RuntimeError("candidate and evaluator require distinct non-root UIDs")
 
     with tempfile.TemporaryDirectory(prefix="wgrsi-rc2-") as tmp:
         root = Path(tmp)
+        # Both users must traverse the root; only the evaluator owns hidden/.
+        root.chmod(0o711)
         hidden_dir = root / "hidden"
         hidden_dir.mkdir(mode=0o700)
         os.chown(hidden_dir, evaluator.pw_uid, evaluator.pw_gid)
 
         hidden = hidden_dir / "suite.json"
         key_path = hidden_dir / "evaluator.key"
+        expected_token = secrets.token_hex(16)
         hidden.write_text(
-            json.dumps({"expected_token": "sealed-token", "baseline_score": 0.50}),
+            json.dumps({"expected_token": expected_token, "baseline_score": 0.50}),
             encoding="utf-8",
         )
         private_key = Ed25519PrivateKey.generate()
@@ -77,22 +89,22 @@ def main() -> int:
             os.chmod(path, 0o600)
             os.chown(path, evaluator.pw_uid, evaluator.pw_gid)
 
-        candidate_probe = run(
-            ["runuser", "-u", args.candidate_user, "--", "cat", str(hidden)]
-        )
+        candidate_probe = run(["runuser", "-u", args.candidate_user, "--", "cat", str(hidden)])
         if candidate_probe.returncode == 0:
             print(json.dumps({"status": "FAIL", "reason": "candidate-read-hidden-suite"}))
             return 1
 
-        key_probe = run(
-            ["runuser", "-u", args.candidate_user, "--", "cat", str(key_path)]
-        )
+        key_probe = run(["runuser", "-u", args.candidate_user, "--", "cat", str(key_path)])
         if key_probe.returncode == 0:
             print(json.dumps({"status": "FAIL", "reason": "candidate-read-signing-key"}))
             return 1
 
-        candidate = json.dumps({"token": "sealed-token", "score": 0.61})
-        worker_path = Path(__file__).with_name("rc2_evaluator_worker.py").resolve()
+        candidate = json.dumps({"token": expected_token, "score": 0.61})
+        # Hosted runner workspaces need not be traversable by the evaluator UID.
+        # Copy only the public worker into the accessible harness directory.
+        worker_path = root / "rc2_evaluator_worker.py"
+        shutil.copyfile(Path(__file__).with_name("rc2_evaluator_worker.py"), worker_path)
+        worker_path.chmod(0o444)
         result = run(
             [
                 "runuser",

@@ -47,7 +47,11 @@ def main() -> int:
         )
         decision = gate.evaluate(baseline, candidate, sufficiency)
         if not decision.accepted:
-            print(json.dumps({"status": "FAIL", "generation": generation, "reasons": decision.reasons}))
+            print(
+                json.dumps(
+                    {"status": "FAIL", "generation": generation, "reasons": decision.reasons}
+                )
+            )
             return 1
         receipt = ledger.adopt(
             candidate,

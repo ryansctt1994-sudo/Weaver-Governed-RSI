@@ -58,7 +58,13 @@ class SufficiencyEvidence:
     uncertainty: float
 
     def __post_init__(self) -> None:
-        for field in ("coverage", "independence", "detection_power", "latency_margin", "uncertainty"):
+        for field in (
+            "coverage",
+            "independence",
+            "detection_power",
+            "latency_margin",
+            "uncertainty",
+        ):
             _unit_interval(getattr(self, field), field)
 
     @property
@@ -218,8 +224,8 @@ class CycleReceipt:
 
     def verify(self) -> bool:
         body = asdict(self)
-        claimed = body.pop("receipt_sha256")
-        return hashlib.sha256(_canonical_json(body)).hexdigest() == claimed
+        body.pop("receipt_sha256")
+        return hashlib.sha256(_canonical_json(body)).hexdigest() == self.receipt_sha256
 
 
 class BestStateLedger:
