@@ -83,3 +83,11 @@ def test_invalid_baseline_is_refused(score: object) -> None:
             {"token": "sealed-token", "score": 0.90},
             {"expected_token": "sealed-token", "baseline_score": score},
         )
+
+
+@pytest.mark.parametrize("name", ["", "--root", "user name", "a;touch", "../user"])
+def test_isolation_usernames_cannot_inject_options(name: str) -> None:
+    from experiments.run_wgrsi_rc2_isolation import ensure_user
+
+    with pytest.raises(ValueError, match="username"):
+        ensure_user(name)

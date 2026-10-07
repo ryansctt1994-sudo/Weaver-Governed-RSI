@@ -11,8 +11,10 @@ import argparse
 import json
 import os
 import pwd
+import re
+import secrets
 import shutil
-import subprocess
+import subprocess  # nosec B404
 import sys
 import tempfile
 from pathlib import Path
@@ -22,7 +24,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 def run(command: list[str], *, input_text: str | None = None) -> subprocess.CompletedProcess[str]:
     # Commands are fixed harness argv; candidate JSON is sent only through stdin.
-    return subprocess.run(  # noqa: S603
+    return subprocess.run(  # noqa: S603  # nosec B603
         command,
         input=input_text,
         text=True,
@@ -40,6 +42,8 @@ def require_linux_tools() -> None:
 
 
 def ensure_user(name: str) -> None:
+    if re.fullmatch(r"[a-z_][a-z0-9_-]{0,31}", name) is None:
+        raise ValueError("invalid harness username")
     try:
         pwd.getpwnam(name)
         return
@@ -74,8 +78,9 @@ def main() -> int:
 
         hidden = hidden_dir / "suite.json"
         key_path = hidden_dir / "evaluator.key"
+        expected_token = secrets.token_hex(16)
         hidden.write_text(
-            json.dumps({"expected_token": "sealed-token", "baseline_score": 0.50}),
+            json.dumps({"expected_token": expected_token, "baseline_score": 0.50}),
             encoding="utf-8",
         )
         private_key = Ed25519PrivateKey.generate()
@@ -94,7 +99,7 @@ def main() -> int:
             print(json.dumps({"status": "FAIL", "reason": "candidate-read-signing-key"}))
             return 1
 
-        candidate = json.dumps({"token": "sealed-token", "score": 0.61})
+        candidate = json.dumps({"token": expected_token, "score": 0.61})
         # Hosted runner workspaces need not be traversable by the evaluator UID.
         # Copy only the public worker into the accessible harness directory.
         worker_path = root / "rc2_evaluator_worker.py"

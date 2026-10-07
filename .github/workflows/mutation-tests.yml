@@ -29,7 +29,9 @@ jobs:
         # mutmut's coverage pass unloads newly imported Python modules. Preload
         # the native crypto backend so its exception classes keep their identity.
         run: >-
-          python -c 'import cryptography.hazmat.primitives.asymmetric.ed25519;
+          python -c 'import cryptography.exceptions;
+          from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey;
+          Ed25519PrivateKey.generate();
           from mutmut.__main__ import cli; cli()' run
       - run: mutmut results
       - run: >-
