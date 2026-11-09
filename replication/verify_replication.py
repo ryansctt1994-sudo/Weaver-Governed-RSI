@@ -8,6 +8,7 @@ import base64
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from cryptography.exceptions import InvalidSignature
 from jsonschema import Draft202012Validator
@@ -19,9 +20,30 @@ from kernel.ledger import canonical_json  # noqa: E402
 from kernel.verifier import load_public_key, public_key_fingerprint  # noqa: E402
 
 
+
+def _strict_json_file(path: Path) -> Any:
+    """Parse signed inputs without ambiguous duplicate names or NaN tokens."""
+    def unique_names(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for name, value in pairs:
+            if name in result:
+                raise ValueError(f"duplicate JSON object key: {name}")
+            result[name] = value
+        return result
+
+    def reject_nonfinite(token: str) -> None:
+        raise ValueError(f"nonfinite JSON constant: {token}")
+
+    return json.loads(
+        path.read_text(encoding="utf-8"),
+        object_pairs_hook=unique_names,
+        parse_constant=reject_nonfinite,
+    )
+
+
 def verify(receipt_path: Path, schema_path: Path, public_key_path: Path) -> tuple[bool, str]:
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    receipt = _strict_json_file(receipt_path)
+    schema = _strict_json_file(schema_path)
     errors = sorted(
         Draft202012Validator(schema).iter_errors(receipt), key=lambda item: list(item.path)
     )
