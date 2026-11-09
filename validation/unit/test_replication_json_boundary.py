@@ -43,7 +43,9 @@ def signed_receipt(tmp_path: Path) -> tuple[Path, Path, Path]:
     return receipt_path, schema_path, key_path
 
 
-def test_test_key_signature_and_frozen_receipt_schema_still_verify(signed_receipt):
+def test_test_key_signature_and_frozen_receipt_schema_still_verify(
+    signed_receipt: tuple[Path, Path, Path],
+) -> None:
     assert verify(*signed_receipt) == (True, "valid receipt")
 
 
@@ -60,8 +62,8 @@ def test_test_key_signature_and_frozen_receipt_schema_still_verify(signed_receip
     ],
 )
 def test_signed_receipt_with_shadowed_duplicate_field_is_rejected(
-    signed_receipt, original, injected
-):
+    signed_receipt: tuple[Path, Path, Path], original: str, injected: str
+) -> None:
     receipt_path, schema_path, key_path = signed_receipt
     source = receipt_path.read_text(encoding="utf-8")
     assert original in source
@@ -71,7 +73,9 @@ def test_signed_receipt_with_shadowed_duplicate_field_is_rejected(
 
 
 @pytest.mark.parametrize("token", ["NaN", "Infinity", "-Infinity"])
-def test_nonfinite_receipt_json_is_refused_before_signature_check(signed_receipt, token):
+def test_nonfinite_receipt_json_is_refused_before_signature_check(
+    signed_receipt: tuple[Path, Path, Path], token: str
+) -> None:
     receipt_path, schema_path, key_path = signed_receipt
     source = receipt_path.read_text(encoding="utf-8")
     original = '"result": "INDETERMINATE"'
@@ -82,7 +86,9 @@ def test_nonfinite_receipt_json_is_refused_before_signature_check(signed_receipt
         verify(receipt_path, schema_path, key_path)
 
 
-def test_ambiguous_schema_file_is_rejected_before_validation(signed_receipt, tmp_path):
+def test_ambiguous_schema_file_is_rejected_before_validation(
+    signed_receipt: tuple[Path, Path, Path], tmp_path: Path
+) -> None:
     receipt_path, schema_path, key_path = signed_receipt
     original = schema_path.read_text(encoding="utf-8")
     modified = original.replace(
