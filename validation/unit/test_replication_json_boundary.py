@@ -86,8 +86,11 @@ def test_nonfinite_receipt_json_is_refused_before_signature_check(signed_receipt
 def test_ambiguous_schema_file_is_rejected_before_validation(signed_receipt, tmp_path):
     receipt_path, schema_path, key_path = signed_receipt
     original = schema_path.read_text(encoding="utf-8")
-    modified = original.replace('"title": "Independent replication receipt"',
-                                '"title": "anything", "title": "Independent replication receipt"', 1)
+    modified = original.replace(
+        '"title": "Independent replication receipt"',
+        '"title": "anything", "title": "Independent replication receipt"',
+        1,
+    )
     assert modified != original
     new_schema = tmp_path / "ambiguous-schema.json"
     new_schema.write_text(modified, encoding="utf-8")
