@@ -20,9 +20,9 @@ from kernel.ledger import canonical_json  # noqa: E402
 from kernel.verifier import load_public_key, public_key_fingerprint  # noqa: E402
 
 
-
 def _strict_json_file(path: Path) -> Any:
     """Parse signed inputs without ambiguous duplicate names or NaN tokens."""
+
     def unique_names(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         result: dict[str, Any] = {}
         for name, value in pairs:
