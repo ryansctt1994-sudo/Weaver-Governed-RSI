@@ -3,6 +3,7 @@
 Successful signature verification establishes only receipt bytes signed by the
 test key. It does not establish replicator independence or evidence promotion.
 """
+
 from __future__ import annotations
 
 import base64
@@ -30,9 +31,7 @@ def signed_receipt(tmp_path: Path) -> tuple[Path, Path, Path]:
     key_path.write_bytes(public_pem)
     schema_path = ROOT / "schemas" / "replication_receipt.schema.json"
     receipt = json.loads(
-        (ROOT / "replication" / "replication_receipt.example.json").read_text(
-            encoding="utf-8"
-        )
+        (ROOT / "replication" / "replication_receipt.example.json").read_text(encoding="utf-8")
     )
     receipt["replicator"]["public_key_fingerprint"] = public_key_fingerprint(public_pem)
     body = {name: value for name, value in receipt.items() if name != "signature"}
